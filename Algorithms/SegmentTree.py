@@ -37,8 +37,8 @@ class segtree:
             return
         
         mid = (start + end) // 2
-        left = 2*(nodo + 1)
-        right = 2*(nodo + 1) + 1
+        left = 2*nodo + 1
+        right = 2*nodo + 2
         
         if start <= index <= mid:
             self._update(left, start, mid, index, valor)
@@ -61,8 +61,8 @@ class segtree:
         
         #Interseção parcial
         mid = (start + end) // 2
-        left = 2*(nodo + 1)
-        right = 2*(nodo + 1) + 1
+        left = 2*nodo + 1
+        right = 2*nodo + 2
         
         sum_l = self._query(left, start, mid, l, r)
         sum_r = self._query(right, mid+1, end, l, r)
