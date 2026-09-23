@@ -1,4 +1,5 @@
 #include <iostream>
+using 
 
 void solve(int num){
     if (num % 2 == 0 && num > 2) {
