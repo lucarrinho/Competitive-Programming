@@ -1,3 +1,6 @@
+import sys
+sys.setrecursionlimit(200000)
+
 class SegTreeLazy:
     def __init__(self, vetor):
         self.n = len(vetor)
@@ -10,6 +13,7 @@ class SegTreeLazy:
     def build(self, nodo, start, end):
         if start == end:
             self.tree[nodo] = self.vetor[start]
+            return
         
         mid = (start + end) // 2
         left = 2 * nodo
@@ -22,7 +26,7 @@ class SegTreeLazy:
     
     def update(self, l, r, valor):
         #marca todos no intervalo para atualizar o valor
-        self._update(0, 0, self.n-1, l, r, valor)
+        self._update(1, 0, self.n-1, l-1, r-1, valor)
     
     def _update(self, nodo, start, end, l, r, valor):
         #define o lazy de todos no intervalo
@@ -35,11 +39,11 @@ class SegTreeLazy:
             return
                 
         mid = (start + end) // 2
-        left = 2 * nodo + 1
-        right = 2 * nodo + 2
+        left = 2 * nodo
+        right = 2 * nodo + 1
         
         self._update(left, start, mid, l, r, valor)
-        self._update(left, mid+1, end, l, r, valor)
+        self._update(right, mid+1, end, l, r, valor)
         return
     
     def _push(self, nodo, start, end):
@@ -53,14 +57,23 @@ class SegTreeLazy:
         self.lazy[nodo] = 0
     
     def query(self, k):
+        k -= 1
+        if k < 0 or k > self.n-1:
+            return -1
         return self._query(1, 0, self.n-1, k)
     
     def _query(self, nodo, start, end, k):
         self._push(nodo, start, end)
         if start == end:
-            return self.tree[start]
+            return self.tree[nodo]
         
+        mid = (start + end) // 2
+        left = 2 * nodo
+        right = 2 * nodo + 1
         
+        if k <= mid:
+            return self._query(left, start, mid, k)
+        return self._query(right, mid+1, end, k)
 
 def main():
     n, q = map(int, input().split())
@@ -72,4 +85,6 @@ def main():
         if ent[0] == 1:
             segtreelazy.update(ent[1], ent[2], ent[3])
         elif ent[0] == 2:
-            segtreelazy.query(ent[1])
+            print(segtreelazy.query(ent[1]))
+
+main()
