@@ -4,6 +4,7 @@ using namespace std;
 using ll = long long;
 const int N = 2e5, LOG = 20;
 
+int adj[N][N-1];
 int dep[N];
 int p[N][20];
 
@@ -25,10 +26,7 @@ void dfs_build(int v, int pr) {
 }
 
 int lca(int v, int u){
-    if(dep[v] < dep[u]){
-    swap();
-
-    }
+    if(dep[v] < dep[u]) swap(v, u);
 
     int dist = dep[v] - dep[u];
     
