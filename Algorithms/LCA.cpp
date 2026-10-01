@@ -1,12 +1,10 @@
 #include <bits/stdc++.h>
 #include <utility>
 using namespace std;
-using ll = long long;
-const int N = 2e5, LOG = 20;
+const int N = 2e5+10, LOG = 20;
 
-int adj[N][N-1];
-int dep[N];
-int p[N][20];
+vector<int> dep;
+vector<vector<int>> adj, p;
 
 void dfs_build(int v, int pr) {
     //calcula ancestrais
@@ -51,17 +49,17 @@ int lca(int v, int u){
     return p[v][0];
 }
 
+void solve(){
+}
+
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
     int t = 1;
-    cin >> t;
-
+    //cin >> t;
     while (t--) {
         solve();
     }
-
     return 0;
 }
 

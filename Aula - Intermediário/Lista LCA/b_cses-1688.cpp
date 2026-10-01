@@ -3,9 +3,8 @@
 using namespace std;
 const int N = 2e5+1, LOG = 20;
 
-int dep[N];
-int p[N][LOG];
-vector<vector<int>> adj(N);
+vector<int> dep;
+vector<vector<int>> adj, p;
 
 void dfs_build(int v, int pai){
     for(int i = 1; i < LOG; i++){
@@ -41,11 +40,16 @@ int LCA(int u, int v){
 void solve() {
     int n, q, a, b;
     cin >> n >> q;
+    dep.resize(n+1);
+    adj.resize(n+1);
+    p.resize(n+1, vector<int>(20));
+
     for (int i = 2; i <= n; i++){
         int j;
         cin >> j;
         adj[j].push_back(i);
     }
+    dep[1] = 0;
     dfs_build(1, 1);
 
     while (q--) {
