@@ -8,6 +8,9 @@ struct bit {
 
     bit(int n_): n(n_), a(n+1){}
 
+    void build(){
+    }
+
     void add(int i, ll x){
         for (;i <= n; i += (i & (-i))){
             a[i] += x;
