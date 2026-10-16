@@ -13,10 +13,8 @@ void solve() {
 
     int ans = 0;
     for (int i = 0; i < n; i++){
-        if (bit_width(a[i]) == bit_width(max_num)){
-            for (int j = 0; j < n; j++){
-                ans = max(ans, a[j] ^ a[i]);
-            }
+        for (int j = 0; j < n; j++){
+            ans = max(ans, a[j] ^ a[i]);
         }
     }
     cout << ans << endl;
