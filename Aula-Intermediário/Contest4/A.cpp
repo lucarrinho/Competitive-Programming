@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int timer = 1;
+int timer;
 vector<vector<int>> adj;
 vector<int> tin, tout;
 
@@ -10,26 +10,29 @@ struct bit{
     bit(int n_): n(n_), a((2*n)){}
 
     void add(int i, int x){
-        for (; i <= n; i += (i & (-i))){
+        for (; i < (2*n); i += (i & (-i))){
             a[i] += x;
         }
     }
 
     int query(int i, int j){
-        int somai = 0, somaj = 0; i--;
+        int somai = 0, somaj = 0;
+
         for (; i > 0; i -= (i & (-i)))
             somai += a[i];
+
         for (; j > 0; j -= (j & (-j)))
             somaj += a[j];
+
         return somaj - somai;
     }
 };
 
 void dfs_build(string s, bit tour, int v, int pr = -1){
+    timer++;
     tin[v] = timer;
     if (s[v-1] == 'W') tour.add(timer, 1);
     else tour.add(timer, -1);
-    timer++;
 
     for (int ch: adj[v]){
         if (ch == pr) continue;
@@ -37,7 +40,6 @@ void dfs_build(string s, bit tour, int v, int pr = -1){
     }
 
     tout[v] = timer;
-    timer++;
 }
 
 void solve() {
@@ -51,12 +53,14 @@ void solve() {
         cin >> a;
         adj[a].push_back(i);
     }
-    string s; cin >> s;
+
+    string s; cin >> s; timer = 0;
     dfs_build(s, tour, 1);
 
     int resp = 0;
-    for (int i = 1; i <= n; i++)
-        if (tour.query(tin[i], tout[i]) == 0) resp++;
+    for (int i = 1; i <= n; i++){
+        if (tour.query(tin[i]-1, tout[i]) == 0) resp++;
+    }
 
     cout << resp << endl;
 }
@@ -68,7 +72,6 @@ int main() {
     cin >> t;
     while (t--) {
         solve();
-        timer = 1;
     }
     return 0;
 }
