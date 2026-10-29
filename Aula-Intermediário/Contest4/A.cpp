@@ -28,7 +28,7 @@ struct bit{
     }
 };
 
-void dfs_build(string s, bit tour, int v, int pr = -1){
+void dfs_build(string s, bit &tour, int v, int pr = -1){
     timer++;
     tin[v] = timer;
     if (s[v-1] == 'W') tour.add(timer, 1);
