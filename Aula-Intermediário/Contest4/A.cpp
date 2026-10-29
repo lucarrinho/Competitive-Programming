@@ -15,11 +15,13 @@ struct bit{
         }
     }
 
-    int query(int i){
-        int resp = 0;
+    int query(int i, int j){
+        int somai = 0, somaj = 0; i--;
         for (; i > 0; i -= (i & (-i)))
-            resp += a[i];
-        return resp;
+            somai += a[i];
+        for (; j > 0; j -= (j & (-j)))
+            somaj += a[j];
+        return somaj - somai;
     }
 };
 
@@ -53,10 +55,8 @@ void solve() {
     dfs_build(s, tour, 1);
 
     int resp = 0;
-    for (int i = 1; i <= n; i++){
-        int sum = tour.query(tout[i]) - tour.query(tin[i]-1);
-        if (sum == 0) resp++;
-    }
+    for (int i = 1; i <= n; i++)
+        if (tour.query(tin[i], tout[i]) == 0) resp++;
 
     cout << resp << endl;
 }
