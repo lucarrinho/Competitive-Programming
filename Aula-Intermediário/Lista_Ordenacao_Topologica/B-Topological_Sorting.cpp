@@ -11,14 +11,14 @@ void kahn(int n){
             grau[to]++;
     }
 
-    queue<int> fila; //trocar por priority queue
+    priority_queue<int, vector<int>, greater<int>> fila; //trocar por priority queue
     for (int v = 1; v <= n; v++){
         if (grau[v] == 0)
             fila.push(v);
     }
 
     while (!fila.empty()){
-        int v = fila.front(); fila.pop();
+        int v = fila.top(); fila.pop();
         ordem.push_back(v);
         for (int to: adj[v]){
             grau[to]--;
