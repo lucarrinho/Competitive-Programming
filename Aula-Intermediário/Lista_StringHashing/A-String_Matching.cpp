@@ -8,17 +8,24 @@ vector<ll> h1, p1, h2, p2;
 
 void construir(string s, vector<ll>& h, vector<ll>& p, ll M){
     int n = s.size();
+    h[0] = (int)s[0] % M;
     for (int i = 0; i < n; i++){
-        h[i+1] = (h[i] * B + (int)s[i]) % M;
         p[i+1] = p[i] * B % M;
+        h[i+1] = (h[i] + p[i+1] * (int)s[i]) % M;
     }
 }
 
 ll hash_trecho(ll H, ll P, ll l, ll r, ll M){
-    return (H[r] - H[l] * P[r-l]) % M;
+    if (l == 0) return (H[r] % M);
+    return (H[r] - H[l-1] / P[l]) % M;
 }
 ll hash_padrao(string s, ll M){
-    // Como?????????????
+    ll p = 1; ll h = 0;
+    for (char c: s){
+        h += (int)c * p % M;
+        p *= B % M;
+    }
+    return h;
 }
 
 void solve() {
@@ -35,9 +42,9 @@ void solve() {
 
     int k = padrao.size(); int ans = 0;
     for (int i = 0; i < n-k; i++){
-        // pegar hashs no intervalo [i, i+k-1]
-        // comparar ambos hashs com hash do padrao
-        // se igual: ans += 1;
+        ll a1 = hash_trecho(h1, p1, i, i+k-1, M1);
+        ll a2 = hash_trecho(h2, p2, i, i+k-1, M2);
+        if (a1 == hash_pad1 && a2 == hash_pad2) ans += 1;
     }
     cout << ans << endl;
 }
