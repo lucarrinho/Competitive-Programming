@@ -2,17 +2,23 @@
 using namespace std;
 using ll = long long;
 
-vector<int>
+vector<set<int>> box;
 
 void solve() {
+    int n, q; cin >> n >> q;
+    box.resize(n+1, {});
+    for (int i = 1; i <= n; i++){
+        int c; cin >> c;
+        box[i].insert(c);
+    }
 
-    for (int i = 0; i < 1; i++){
+    while (q--){
         int a, b; cin >> a >> b;
-        if (caixa[a].size() > caixa[b].size()){
-            aux = caixa[a];
-            caixa[a] = caixa[b];
-            caixa[b] = aux;
-        }
+        if (box[a].size() > box[b].size())
+            swap(box[a], box[b]);
+        box[b].merge(box[a]);
+        box[a].clear();
+        cout << box[b].size() << "\n";
     }
 }
 
@@ -20,7 +26,7 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     int t = 1;
-    cin >> t;
+    //cin >> t;
     while (t--) {
         solve();
         }

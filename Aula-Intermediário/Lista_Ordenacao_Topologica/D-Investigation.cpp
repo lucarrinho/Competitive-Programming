@@ -1,27 +1,44 @@
 #include <bits/stdc++.h>
 using namespace std;
 using ll = long long;
-const int MOD = 1e9 + 7;
+const ll MOD = 1e9 + 7, INF = 1e18;
 
-vector<vector<int>> adj;
-vector<int> grau, ordem;
+vector<vector<pair<ll, ll>>> adj;
+vector<ll> grau, ordem, dist;
 
-void kahn(int n){
-    for (int v = 1; v <= n; v++){
-        for (int to: adj[v])
+void dijkstra(){
+    priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<pair<ll, ll>>> fila;
+    dist[1] = 0;
+    fila.push({0, 1});
+    while (!fila.empty()){
+        auto [d, v] = fila.top(); fila.pop();
+        if (d > dist[v]) continue;
+        for (auto [ch, c]: adj[v]){
+            ll nova = dist[v] + c;
+            if (nova < dist[ch]){
+                dist[ch] = nova;
+                fila.push({dist[ch], ch});
+            }
+        }
+    }
+}
+
+void kahn(ll n){
+    for (ll v = 1; v <= n; v++){
+        for (auto [to, c]: adj[v])
             grau[to]++;
     }
 
-    queue<int> fila; //trocar por priority queue (opcional)
-    for (int v = 1; v <= n; v++){
+    priority_queue<ll, vector<ll>, greater<ll>> fila;
+    for (ll v = 1; v <= n; v++){
         if (grau[v] == 0)
             fila.push(v);
     }
 
     while (!fila.empty()){
-        int v = fila.front(); fila.pop();
+        ll v = fila.top(); fila.pop();
         ordem.push_back(v);
-        for (int to: adj[v]){
+        for (auto [to, c]: adj[v]){
             grau[to]--;
             if (grau[to] == 0)
                 fila.push(to);
@@ -30,29 +47,37 @@ void kahn(int n){
 }
 
 void solve() {
-    int n, m; cin >> n >> m;
+    ll n, m; cin >> n >> m;
     adj.resize(n+1); grau.resize(n+1, 0);
-
-    for (int i = 0; i < m; i++){
-        int a, b, c; cin >> a >> b >> c;
-        adj[x].push_back(y);
+    dist.resize(n+1, INF);
+    for (ll i = 0; i < m; i++){
+        ll a, b, c; cin >> a >> b >> c;
+        adj[a].push_back({b, c});
     }
-    //dijkstra, guardando as dists (dist[n] é a dist minima)
-    for (int i = 1; i <= n; i++){
-        //monta o novo grafo apenas com as rotas de preço minimo
+    dijkstra();
+    vector<vector<pair<ll, ll>>> temp(n+1);
+    for (ll v = 1; v <= n; v++){
+        for (auto [ch, c]: adj[v]) if (dist[ch] == dist[v]+c) {
+            temp[v].push_back({ch, c});
+        }
     }
+    adj = temp;
     kahn(n);
 
-    //calculas os ways, assim temos os ways de chegar a n com a dist minima
-    vector<int> ways(n+1, 0); ways[1] = 1;
-    for (int v: ordem){
-        for (int to: adj[v]){
+    vector<ll> ways(n+1, 0), menor(n+1, INF), maior(n+1, 0);
+    ways[1] = 1; menor[1] = 0;
+    for (ll v: ordem){
+        for (auto [to, c]: adj[v]){
             ways[to] = (ways[to] + ways[v]) % MOD;
+            menor[to] = min(menor[to], menor[v]+1);
+            maior[to] = max(maior[to], maior[v]+1);
         }
     }
 
-    // como calcular o numero de voos numa rota?
-    cout << ways[n] << endl;
+    cout << dist[n] << " ";
+    cout << ways[n] << " ";
+    cout << menor[n] << " ";
+    cout << maior[n] << "\n";
 }
 
 int main() {

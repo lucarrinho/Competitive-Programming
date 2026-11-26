@@ -6,22 +6,22 @@ vector<vector<int>> adj;
 vector<set<int>> colors;
 vector<int> cor, ans;
 
-void dfs(int u, int pai){
-    for (int ch: adj[u]){
-        if (ch == pai) continue;
-        dfs(ch, u);
-        if (colors[ch].size() > colors[u].size())
-            swap(colors[ch], colors[u]);
+void dfs(int v, int pr){
+    for (int ch: adj[v]){
+        if (ch == pr) continue;
+        dfs(ch, v);
+        if (colors[ch].size() > colors[v].size())
+            swap(colors[ch], colors[v]);
     }
 
-    colors[u].insert(u);
-    for (int ch: adj[u]){
-        if (ch == pai) continue;
+    colors[v].insert(cor[v]);
+    for (int ch: adj[v]){
+        if (ch == pr) continue;
         for (int c: colors[ch])
-            colors[u].insert(c);
+            colors[v].insert(c);
         colors[ch].clear(); //opcional
     }
-    ans[u] = colors[u].size();
+    ans[v] = colors[v].size();
 }
 
 void solve() {
